@@ -1,48 +1,81 @@
 # EG Property Estimator (ML + FastAPI + React)
 
-End-to-end project to estimate Egyptian property prices from listing features.
+---
 
-* **ML layer:** scikit-learn pipeline trained on 54k listings
-* **Serving:** FastAPI `/predict` returns estimated **price (EGP)**
-* **Frontend:** Vite + React form
+## Architecture and Flow
+
+This project is a simple, end-to-end pipeline that turns raw listing data into a live property-price estimator website.
+
+1. **Collect data → CSV**
+   Scrape/export property listings (type, area, bedrooms, bathrooms, level, furnished, city, region, price). Do a **quick visual clean** in Excel/Sheets (fix obvious typos, remove duplicates/empty prices). Save as **`Eg_RealState_Data_Cleaned.csv`** and put it in: `ml-layer/data/Eg_RealState_Data_Cleaned.csv`.
+
+2. **Train (Python)**
+   Run `train.py`. It **cleans** data, performs light **feature engineering** (e.g., level → number, “is ground”, area/rooms ratios, log/sqrt of area), builds a **pipeline** (numeric passthrough, One-Hot for `type`, Smoothed Target Encoding for `city`/`region`), trains a gradient-boosting model on **price-per-m²**, **blends** with a median baseline, applies a small **city-bias** calibration, and reports RMSE/MAE/MAPE.
+
+3. **Save the model**
+   The trained pipeline is saved to **`ml-layer/artifacts/ppm2_model.joblib`**.
+   *What is `joblib`?* It’s the standard way to serialize scikit-learn models/pipelines (Pickle under the hood, efficient with NumPy arrays).
+
+4. **Serve (FastAPI)**
+   FastAPI loads `ppm2_model.joblib` + baseline stats once at startup and exposes **`POST /predict`**. The API reuses the same feature engineering, predicts ppm², blends with baseline, applies city bias, and returns a final **EGP price** and debug details.
+
+5. **Frontend (React + Vite)**
+   A small React app (Vite) shows a **centered blue/white form**. On submit, it calls the FastAPI endpoint (via Vite proxy) and displays the estimate.
+
+That’s it: **CSV → Train & save model → API → React form**.
 
 ---
 
-## 0) Prerequisites
+## Prerequisites
 
-* **Python** 3.13 (use `python3 --version`)
+* **Python** 3.13
 * **Node.js** ≥ **20.19** or **22.12+** (Vite requirement)
+  Recommended (macOS) via `nvm`:
 
-  * Recommended: `nvm`
+  ```bash
+  brew install nvm && mkdir -p ~/.nvm
+  echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
+  echo '. "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
+  source ~/.zshrc
+  nvm install 22.12.0
+  nvm use 22.12.0
+  ```
 
-    ```bash
-    brew install nvm && mkdir -p ~/.nvm
-    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
-    echo '. "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
-    source ~/.zshrc
-    nvm install 22.12.0
-    nvm use 22.12.0
-    ```
-* macOS shell: `zsh` (default on macOS)
-
-Repo layout (relative to **project root**):
-
-```
-ml-fastapi/ml-fastapi/
-├─ ml-layer/
-│  ├─ src/          # train.py, predict.py, utils.py, encoders.py
-│  ├─ data/         # Eg_RealState_Data_Cleaned.csv   <-- put CSV here
-│  └─ artifacts/    # created after training (model + stats)
-├─ fastapi-layer/   # main.py (API)
-└─ frontend-layer/  # React app (Vite)
-```
-
-> **Important:** Place your dataset at:
+> **Dataset**: place your CSV at
 > `ml-layer/data/Eg_RealState_Data_Cleaned.csv`
 
 ---
 
-## 1) Python environment & dependencies
+## Project Structure
+
+```
+ml-fastapi/ml-fastapi/
+├─ ml-layer/
+│  ├─ src/
+│  │  ├─ train.py         # training script (logs to MLflow + saves artifacts)
+│  │  ├─ predict.py       # inference helper used by FastAPI
+│  │  ├─ utils.py         # feature normalization & engineering
+│  │  └─ encoders.py      # SmoothedTargetEncoder (safe unpickling)
+│  ├─ data/
+│  │  └─ Eg_RealState_Data_Cleaned.csv   # <— put CSV here
+│  ├─ artifacts/          # created by training (saved model + stats)
+│  │  ├─ ppm2_model.joblib
+│  │  ├─ city_bias.csv
+│  │  └─ baseline_stats/
+│  │     ├─ m_crt.csv     # median ppm² by (city,region,type)
+│  │     ├─ m_cr.csv      # median ppm² by (city,region)
+│  │     ├─ m_c.csv       # median ppm² by (city)
+│  │     └─ m_g.txt       # global median ppm²
+│  └─ mlruns/             # MLflow tracking store (created on first run)
+│     └─ ...              # experiments/runs metadata
+├─ fastapi-layer/
+│  └─ main.py             # FastAPI app (POST /predict, /health)
+└─ frontend-layer/        # Vite + React app (blue/white UI)
+```
+
+---
+
+## 1) Python Env & Dependencies
 
 From the **project root**:
 
@@ -60,87 +93,95 @@ pip install --upgrade pip
 pip install scikit-learn==1.7.1 pandas==2.2.2 numpy==1.26.4 \
             mlflow==3.3.2 joblib==1.4.2 \
             fastapi==0.115.0 uvicorn==0.30.6 pydantic==2.9.2
-```
 
-Verify dataset exists:
-
-```bash
+# Verify dataset
 ls -lh ml-layer/data/Eg_RealState_Data_Cleaned.csv
 ```
 
 ---
 
-## 2) Train the model (with MLflow tracking)
+## 2) Training with MLflow
 
-**What this training does (high level):**
+### What training does
 
-* **Cleaning:** keep sale listings, remove obvious bad cities, bucket rare regions
-* **Outliers:** global **ppm²** trim (1–99th pct) + **per-city** robust trim (5–95th pct for cities with ≥50 rows)
-* **Feature engineering (numeric):**
-  `level_num, is_ground, furnished_bin, area_per_bedroom, bathrooms_per_bedroom, rooms_total, log_area, sqrt_area, bed_bath_ratio, area_per_room`
-* **Categoricals:**
+* **Cleaning**
+
+  * Keep sale listings, remove bad city tokens, bucket rare regions
+  * Outlier control in **price-per-m² (ppm²)**:
+
+    * Global trim at **1–99th percentiles**
+    * **Per-city** robust trim at **5–95th percentiles** for cities with ≥50 rows
+* **Feature engineering (numeric)**
+
+  * `level_num`, `is_ground`, `furnished_bin`
+  * `area_per_bedroom`, `bathrooms_per_bedroom`, `rooms_total`
+  * `log_area`, `sqrt_area`, `bed_bath_ratio`, `area_per_room`
+* **Categoricals**
 
   * `type` → **One-Hot Encoding**
-  * `city, region` → **Smoothed Target Encoding** (leak-safe inside CV)
-* **Target:** **price-per-m² (ppm²)** with **log1p** transform (via `TransformedTargetRegressor`)
-* **Regressor:** `HistGradientBoostingRegressor(loss="absolute_error")`
-* **Blending:** CV-tuned blend of model ppm² with **median-based baseline**
-  (medians computed on `(city, region, type)` → `(city, region)` → `(city)` → global)
-* **Calibration:** Out-of-fold **city bias** multiplier (capped to 0.6–1.6)
-* **Metrics reported:** RMSE, MAE, **MAPE** in **EGP** price space
+  * `city`, `region` → **Smoothed Target Encoding** (leak-safe inside CV)
+* **Target & model**
 
-Train:
+  * Train on **ppm²** with **log1p** transform (via `TransformedTargetRegressor`)
+  * Regressor: **HistGradientBoostingRegressor** (`loss="absolute_error"`)
+* **Blending & calibration**
+
+  * Blend model ppm² with a **median baseline** by location/type (alpha tuned by CV)
+  * **City bias** calibration from out-of-fold predictions (clipped to 0.6–1.6)
+* **Metrics (price space, EGP)**
+
+  * **RMSE**, **MAE**, **MAPE** + **per-city/region diagnostics**
+
+### Train command
 
 ```bash
 # From project root (venv active)
 python ml-layer/src/train.py
 ```
 
-**Example output (yours will vary):**
+### Example output & evaluation
 
 ```
 Saved: ml-layer/artifacts/ppm2_model.joblib
 Best blend alpha=0.8
 Pre-bias Test RMSE=943,439 | MAE=634,289 | MAPE=55.04%
 Post-bias Test RMSE=943,693 | MAE=634,629 | MAPE=55.12%
-
-Worst 8 slices by city (by MAPE):
-... (diagnostics)
 ```
 
-**Evaluation:**
-
-* Current **MAPE \~55%** (listing prices + limited features).
-* Biggest remaining errors are **intra-city** (compound/finishing/payment terms).
-* Accuracy will improve after adding **geo (lat/lon)** and **text** features (title/description) or segmenting models.
+* **Interpretation:** With listing prices and limited features (no text/geo), **MAPE \~55%** is expected.
+* **Next gains:** add **geo (lat/lon)**, **text features** (title/description), or **segment** models.
 
 Artifacts created:
 
 ```
 ml-layer/artifacts/
 ├─ ppm2_model.joblib        # sklearn pipeline (preprocess + model) that predicts ppm²
-├─ baseline_stats/          # median ppm² fallback tables (+ global)
+├─ baseline_stats/
+│  ├─ m_crt.csv             # median ppm² by (city,region,type)
+│  ├─ m_cr.csv              # median ppm² by (city,region)
+│  ├─ m_c.csv               # median ppm² by (city)
+│  └─ m_g.txt               # global median ppm²
 └─ city_bias.csv            # city-level calibration factors
 ```
 
-### 2.1 MLflow UI (optional but recommended)
+### MLflow UI
 
 ```bash
-# Point UI to the correct store (ml-layer/mlruns)
+# From project root
 mlflow ui --port 5000 --backend-store-uri ./ml-layer/mlruns
 # Open http://127.0.0.1:5000 → experiment: realestate-eg-price
 ```
 
-You will see params (feature counts, trim settings, blend alpha) & metrics (cv/test RMSE/MAE/MAPE).
-
 ---
 
-## 3) Start the FastAPI backend
+## 3) Start the FastAPI Backend
 
 What it does:
 
-* Loads `ppm2_model.joblib`, baseline medians & city bias
-* Endpoint **POST `/predict`** → returns **price (EGP)** and details (ppm² model/baseline, blend α, city bias)
+* Loads `ppm2_model.joblib`, baseline medians & city bias once.
+* **POST `/predict`**:
+
+  * Normalizes request → predicts ppm² (model) → blends with baseline → applies city bias → returns **price (EGP)**.
 
 Run:
 
@@ -149,7 +190,7 @@ Run:
 uvicorn --app-dir fastapi-layer main:app --reload --port 8000
 ```
 
-Quick health/predict checks:
+### Health & Predict examples
 
 ```bash
 curl http://127.0.0.1:8000/health
@@ -160,7 +201,7 @@ curl -X POST "http://127.0.0.1:8000/predict" \
        "level":"9","furnished":"no","city":"cairo","region":"zahraa al maadi"}'
 ```
 
-**Example response:**
+**Sample response**
 
 ```json
 {
@@ -176,46 +217,28 @@ curl -X POST "http://127.0.0.1:8000/predict" \
 }
 ```
 
-**Evaluation:**
-
-* Output includes breakdown to aid debugging.
-* Rounding to nearest **10k EGP** for UX; adjust in `predict.py` if needed.
-
 ---
 
-## 4) Frontend (Vite + React) — dev server
+## 4) Frontend (Vite + React)
 
-What you’ll get:
-
-* Centered, clean **blue/white** form with clear labels (required fields marked)
-* Submits to FastAPI via **Vite proxy** (`/api → http://127.0.0.1:8000`)
-
-Install & run:
+Dev server uses a proxy so `/api/*` goes to `http://127.0.0.1:8000/*`.
 
 ```bash
-# one-time (in case node_modules not installed yet)
+# Ensure Node is 20.19+ or 22.12+
+node -v
+
+# Install & run
 cd /Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/frontend-layer
 npm install
-
-# start dev server (requires Node 20.19+ or 22.12+)
 npm run dev
 ```
 
 Open: **[http://127.0.0.1:5173](http://127.0.0.1:5173)**
-
-**Example result card after submit:**
-
-```
-Estimated Price: 1,580,000 EGP
-ppm² (model): 9,103 · ppm² (baseline): 9,957 · blend α: 0.8
-Note: treat as a starting point; will improve with geo/text features.
-```
+Submit the form → see the estimated price card.
 
 ---
 
-## 5) Common environment variables (optional)
-
-You generally don’t need to set these; sensible defaults are hard-coded.
+## 5) Environment Variables (optional)
 
 ```bash
 # ML (train.py)
@@ -224,55 +247,37 @@ export DATA_PATH="ml-layer/data/Eg_RealState_Data_Cleaned.csv"
 export ARTIFACT_DIR="ml-layer/artifacts"
 
 # API (main.py / predict.py)
-export ARTIFACT_DIR="$(pwd)/ml-layer/artifacts"    # absolute path preferred
-export BLEND_ALPHA="0.8"                            # try 0.7..0.9 without retraining
+export ARTIFACT_DIR="$(pwd)/ml-layer/artifacts"   # absolute path recommended
+export BLEND_ALPHA="0.8"                           # try 0.7..0.9 without retraining
 ```
 
 ---
 
 ## 6) Troubleshooting
 
-* **`FileNotFoundError: data/...csv`**
-  Make sure the CSV is at `ml-layer/data/Eg_RealState_Data_Cleaned.csv`, or set `DATA_PATH`.
-
-* **`Can't get attribute 'SmoothedTargetEncoder'` when serving**
-  We extracted `SmoothedTargetEncoder` into `ml-layer/src/encoders.py` and added a legacy shim in `predict.py`. If you trained before this refactor, **retrain once** to pickle under the correct module.
-
-* **Vite error `crypto.hash is not a function` or “requires Node 20.19+”**
-  Use `nvm use 22.12.0`, then:
-
-  ```bash
-  cd frontend-layer
-  rm -rf node_modules package-lock.json
-  npm install
-  npm run dev
-  ```
-
-* **macOS reloader oddities**
-  Run `uvicorn` without `--reload` for serving:
-
-  ```bash
-  uvicorn --app-dir fastapi-layer main:app --port 8000
-  ```
+* **CSV not found** → place it at `ml-layer/data/Eg_RealState_Data_Cleaned.csv` or set `DATA_PATH`.
+* **Pickle error: `SmoothedTargetEncoder`** → retrain once after encoder was moved to `encoders.py`.
+* **Vite / Node “crypto.hash”** → `nvm use 22.12.0`, then reinstall.
+* **macOS reload quirks** → run Uvicorn without `--reload`.
 
 ---
 
-## 7) Roadmap to improve accuracy
+## 7) Roadmap to Improve Accuracy
 
-* **Geo features:** geocode regions/compounds → lat/lon, distances to Ring Rd, Nile, POIs
-* **Text features:** TF-IDF(1–2) + SVD(64) on title/description (captures “Palm Hills”, “fully finished”, “installments”, “sea view”)
-* **Segmentation:** separate models for Cairo/New Cairo vs Giza/Zayed/October; fallback for low-data cities
-* **Price range:** add quantile models and return low/median/high
-* **Comps:** nearest-neighbor comps by location + area + rooms for transparency
+* **Geo features:** geocode regions/compounds → lat/lon; distances to Ring Rd, Nile, POIs
+* **Text features:** TF-IDF (1–2 grams) + SVD(64) on title/description
+* **Segmentation:** separate models (Cairo/New Cairo vs Giza/Zayed/October); fallback for low-data cities
+* **Price range:** quantile models (low/median/high)
+* **Comps:** nearest comparable listings (location + area + rooms)
 
 ---
 
-## One-shot script (cheat sheet)
+## One-shot Script (cheat sheet)
 
-From project root:
+From the **project root**:
 
 ```bash
-# ---- Setup Python ----
+# ---- Python setup ----
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
@@ -283,20 +288,19 @@ pip install scikit-learn==1.7.1 pandas==2.2.2 numpy==1.26.4 \
 # ---- Verify dataset ----
 ls -lh ml-layer/data/Eg_RealState_Data_Cleaned.csv
 
-# ---- Train (MLflow logs to ml-layer/mlruns) ----
+# ---- Train ----
 python ml-layer/src/train.py
 
-# ---- (Optional) MLflow UI ----
+# ---- MLflow UI (optional) ----
 mlflow ui --port 5000 --backend-store-uri ./ml-layer/mlruns
 
 # ---- Start API ----
 uvicorn --app-dir fastapi-layer main:app --reload --port 8000
-# test
 curl http://127.0.0.1:8000/health
 curl -X POST "http://127.0.0.1:8000/predict" -H "Content-Type: application/json" \
   -d '{"type":"apartment","area":170,"bedrooms":3,"bathrooms":2,"level":"9","furnished":"no","city":"cairo","region":"zahraa al maadi"}'
 
-# ---- Frontend (Node 22.12+) ----
+# ---- Frontend ----
 cd frontend-layer
 npm install
 npm run dev
@@ -305,3 +309,4 @@ npm run dev
 
 ---
 
+**License**: MIT (or your preferred license).
