@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/5d006cc74fa5450ca2dd09950e9d6dec/artifacts
+end_time: 1756992432186
+entry_point_name: ''
+experiment_id: '412674477905319880'
+lifecycle_stage: active
+run_id: 5d006cc74fa5450ca2dd09950e9d6dec
+run_name: tasteful-cub-485
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756992428236
+status: 3
+tags: []
+user_id: pythonarabia

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/6d24f73257484821a9960fc52916c08c/artifacts
+end_time: 1756991338973
+entry_point_name: ''
+experiment_id: '412674477905319880'
+lifecycle_stage: active
+run_id: 6d24f73257484821a9960fc52916c08c
+run_name: smiling-cat-853
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756991308848
+status: 3
+tags: []
+user_id: pythonarabia

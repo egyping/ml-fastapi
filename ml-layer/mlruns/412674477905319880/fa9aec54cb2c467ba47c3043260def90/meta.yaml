@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/fa9aec54cb2c467ba47c3043260def90/artifacts
+end_time: 1756987654760
+entry_point_name: ''
+experiment_id: '412674477905319880'
+lifecycle_stage: active
+run_id: fa9aec54cb2c467ba47c3043260def90
+run_name: traveling-colt-506
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756987649327
+status: 4
+tags: []
+user_id: pythonarabia

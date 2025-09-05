@@ -1,0 +1,41 @@
+artifact_path: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/models/m-25c52e3119c244869a97bdda5680cee5/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.2
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.1
+is_signature_from_type_hint: false
+mlflow_version: 3.3.2
+model_id: m-25c52e3119c244869a97bdda5680cee5
+model_size_bytes: 2874053
+model_uuid: m-25c52e3119c244869a97bdda5680cee5
+prompts: null
+run_id: 6d24f73257484821a9960fc52916c08c
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "area", "required": true}, {"type": "double",
+    "name": "bedrooms", "required": true}, {"type": "double", "name": "bathrooms",
+    "required": true}, {"type": "double", "name": "level_num", "required": true},
+    {"type": "double", "name": "is_ground", "required": true}, {"type": "double",
+    "name": "furnished_bin", "required": true}, {"type": "double", "name": "area_per_bedroom",
+    "required": true}, {"type": "double", "name": "bathrooms_per_bedroom", "required":
+    true}, {"type": "double", "name": "rooms_total", "required": true}, {"type": "string",
+    "name": "type", "required": true}, {"type": "string", "name": "city", "required":
+    true}, {"type": "string", "name": "region", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-09-04 13:08:55.062233'

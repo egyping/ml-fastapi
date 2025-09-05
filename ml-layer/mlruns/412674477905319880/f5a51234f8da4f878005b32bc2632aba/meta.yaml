@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/f5a51234f8da4f878005b32bc2632aba/artifacts
+end_time: 1756988106474
+entry_point_name: ''
+experiment_id: '412674477905319880'
+lifecycle_stage: active
+run_id: f5a51234f8da4f878005b32bc2632aba
+run_name: unique-duck-802
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756988061530
+status: 3
+tags: []
+user_id: pythonarabia

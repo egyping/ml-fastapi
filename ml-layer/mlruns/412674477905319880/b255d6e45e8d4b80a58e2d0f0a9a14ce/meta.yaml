@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/b255d6e45e8d4b80a58e2d0f0a9a14ce/artifacts
+end_time: 1756991904134
+entry_point_name: ''
+experiment_id: '412674477905319880'
+lifecycle_stage: active
+run_id: b255d6e45e8d4b80a58e2d0f0a9a14ce
+run_name: placid-shad-52
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756991860740
+status: 3
+tags: []
+user_id: pythonarabia

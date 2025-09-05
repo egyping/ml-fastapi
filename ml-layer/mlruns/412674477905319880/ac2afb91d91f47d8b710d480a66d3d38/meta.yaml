@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/ac2afb91d91f47d8b710d480a66d3d38/artifacts
+end_time: 1756993347398
+entry_point_name: ''
+experiment_id: '412674477905319880'
+lifecycle_stage: active
+run_id: ac2afb91d91f47d8b710d480a66d3d38
+run_name: victorious-moose-786
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756993342732
+status: 3
+tags: []
+user_id: pythonarabia

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/mlruns/552242667948434807/69fe0b84643d4350bca6491acc9d51aa/artifacts
+end_time: 1757033862807
+entry_point_name: ''
+experiment_id: '552242667948434807'
+lifecycle_stage: active
+run_id: 69fe0b84643d4350bca6491acc9d51aa
+run_name: fortunate-shrew-43
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1757033858267
+status: 3
+tags: []
+user_id: pythonarabia

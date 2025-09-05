@@ -1,0 +1,34 @@
+{
+  "dataframe_split": {
+    "columns": [
+      "area",
+      "bedrooms",
+      "bathrooms",
+      "level_num",
+      "is_ground",
+      "furnished_bin",
+      "area_per_bedroom",
+      "bathrooms_per_bedroom",
+      "rooms_total",
+      "type",
+      "city",
+      "region"
+    ],
+    "data": [
+      [
+        250.0,
+        3.0,
+        2.0,
+        10.0,
+        0.0,
+        0.0,
+        83.33333333333333,
+        0.6666666666666666,
+        5.0,
+        "apartment",
+        "cairo",
+        "nasr city"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/9fc4485c7cb34205ba216ff3c74c9fa7/artifacts
+end_time: 1756988500767
+entry_point_name: ''
+experiment_id: '412674477905319880'
+lifecycle_stage: active
+run_id: 9fc4485c7cb34205ba216ff3c74c9fa7
+run_name: blushing-dove-839
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756988458751
+status: 3
+tags: []
+user_id: pythonarabia

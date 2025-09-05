@@ -1,0 +1,10 @@
+artifact_location: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/ml-layer/mlruns/412674477905319880/models/m-c74c9d772a4a454a805c87dc12d436f0/artifacts
+creation_timestamp: 1756991898946
+experiment_id: '412674477905319880'
+last_updated_timestamp: 1756991904087
+model_id: m-c74c9d772a4a454a805c87dc12d436f0
+model_type: null
+name: ppm2_sklearn_model
+source_run_id: b255d6e45e8d4b80a58e2d0f0a9a14ce
+status: 2
+status_message: null
