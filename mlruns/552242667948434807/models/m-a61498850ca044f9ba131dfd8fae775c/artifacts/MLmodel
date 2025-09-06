@@ -1,0 +1,44 @@
+artifact_path: file:///Users/pythonarabia/Desktop/code_local/ml-fastapi/ml-fastapi/mlruns/552242667948434807/models/m-a61498850ca044f9ba131dfd8fae775c/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.2
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.1
+is_signature_from_type_hint: false
+mlflow_version: 3.3.2
+model_id: m-a61498850ca044f9ba131dfd8fae775c
+model_size_bytes: 3236096
+model_uuid: m-a61498850ca044f9ba131dfd8fae775c
+prompts: null
+run_id: be83918fa2e642dd8b42211b2aa63e61
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "area", "required": true}, {"type": "double",
+    "name": "bedrooms", "required": true}, {"type": "double", "name": "bathrooms",
+    "required": true}, {"type": "double", "name": "level_num", "required": true},
+    {"type": "double", "name": "is_ground", "required": true}, {"type": "double",
+    "name": "furnished_bin", "required": true}, {"type": "double", "name": "area_per_bedroom",
+    "required": true}, {"type": "double", "name": "bathrooms_per_bedroom", "required":
+    true}, {"type": "double", "name": "rooms_total", "required": true}, {"type": "double",
+    "name": "log_area", "required": true}, {"type": "double", "name": "sqrt_area",
+    "required": true}, {"type": "double", "name": "bed_bath_ratio", "required": true},
+    {"type": "double", "name": "area_per_room", "required": true}, {"type": "string",
+    "name": "type", "required": true}, {"type": "string", "name": "city", "required":
+    true}, {"type": "string", "name": "region", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-09-06 11:31:09.924418'

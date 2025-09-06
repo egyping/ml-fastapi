@@ -1,0 +1,129 @@
+city,region,type,m_crt
+alexandria,__other__,apartment,10588.235294117647
+alexandria,__other__,studio,10833.333333333334
+alexandria,agami,apartment,3282.1969696969695
+alexandria,al ibrahimiyyah,apartment,14838.709677419354
+alexandria,bolkly,apartment,11428.57142857143
+alexandria,cleopatra,apartment,12258.064516129032
+alexandria,gianaclis,apartment,12727.272727272728
+alexandria,gianaclis,duplex,8285.714285714286
+alexandria,glim,apartment,14687.5
+alexandria,kafr abdo,apartment,16253.333333333334
+alexandria,kafr abdo,duplex,19145.631067961163
+alexandria,laurent,apartment,13571.42857142857
+alexandria,laurent,duplex,9333.333333333334
+alexandria,mandara,apartment,5862.068965517241
+alexandria,miami,apartment,8750.0
+alexandria,moharam bik,apartment,10500.0
+alexandria,moharam bik,duplex,6076.923076923077
+alexandria,nakheel,apartment,2833.3333333333335
+alexandria,nakheel,duplex,3109.8901098901097
+alexandria,nakheel,studio,2714.285714285714
+alexandria,roushdy,apartment,14285.714285714286
+alexandria,roushdy,duplex,9740.25974025974
+alexandria,saba pasha,apartment,15500.0
+alexandria,seyouf,apartment,7391.304347826087
+alexandria,sidi beshr,apartment,9090.90909090909
+alexandria,sidi beshr,duplex,7083.333333333333
+alexandria,sidi gaber,apartment,12222.222222222223
+alexandria,smoha,apartment,14880.952380952382
+alexandria,sporting,apartment,12666.666666666666
+aswan,__other__,apartment,5769.2307692307695
+asyut,__other__,apartment,11000.0
+beheira,__other__,apartment,6132.075471698113
+beni suef,__other__,apartment,5093.240093240092
+cairo,__other__,apartment,6428.571428571428
+cairo,__other__,duplex,12222.222222222223
+cairo,badr city,apartment,4558.823529411765
+cairo,badr city,duplex,2407.4074074074074
+cairo,gesr al suez,apartment,4444.444444444444
+cairo,heliopolis,apartment,11250.0
+cairo,heliopolis,duplex,6571.428571428572
+cairo,katameya,apartment,9901.960784313726
+cairo,katameya,penthouse,15061.363636363636
+cairo,maadi,apartment,10000.0
+cairo,maadi,duplex,10416.666666666666
+cairo,madinaty,apartment,19453.765846383296
+cairo,madinaty,duplex,10843.601895734597
+cairo,madinaty,studio,22500.0
+cairo,mokattam,apartment,7189.189189189189
+cairo,mokattam,duplex,9166.666666666666
+cairo,mokattam,penthouse,4666.666666666667
+cairo,mostakbal city,apartment,16581.81818181818
+cairo,mostakbal city,duplex,13390.516039051603
+cairo,mostakbal city,penthouse,12272.727272727272
+cairo,mostakbal city,studio,22549.019607843136
+cairo,nasr city,apartment,9000.0
+cairo,nasr city,duplex,2556.3909774436092
+cairo,nasr city,penthouse,13672.535211267606
+cairo,new cairo - el tagamoa,apartment,11052.631578947368
+cairo,new cairo - el tagamoa,duplex,11184.21052631579
+cairo,new cairo - el tagamoa,penthouse,14363.636363636364
+cairo,new cairo - el tagamoa,studio,19620.25316455696
+cairo,new capital city,apartment,12700.0
+cairo,new capital city,duplex,12810.273261847113
+cairo,new capital city,penthouse,2474.226804123711
+cairo,new capital city,studio,4683.333333333333
+cairo,new heliopolis,apartment,6000.0
+cairo,new heliopolis,duplex,4126.126126126126
+cairo,new nozha,apartment,7125.0
+cairo,obour city,apartment,6857.142857142857
+cairo,obour city,duplex,7432.5842696629215
+cairo,rehab city,apartment,20220.58823529412
+cairo,rehab city,duplex,4102.5641025641025
+cairo,rehab city,penthouse,2000.0
+cairo,rehab city,studio,30000.0
+cairo,sheraton,apartment,19333.333333333332
+cairo,shorouk city,apartment,6664.0245398773
+cairo,shorouk city,duplex,5749.128919860627
+cairo,shorouk city,penthouse,17818.18181818182
+cairo,zahraa al maadi,apartment,9956.709956709956
+dakahlia,__other__,apartment,8106.944444444444
+dakahlia,mansura,apartment,9250.0
+dakahlia,mansura,duplex,7115.384615384615
+damietta,__other__,apartment,8000.0
+damietta,new damietta,apartment,7022.471910112359
+damietta,new damietta,duplex,4822.299651567944
+gharbia,__other__,apartment,5405.8441558441555
+gharbia,tanta,apartment,7885.714285714285
+giza,6th of october,apartment,8000.0
+giza,6th of october,duplex,9811.32075471698
+giza,6th of october,penthouse,15744.68085106383
+giza,6th of october,studio,16000.0
+giza,__other__,apartment,4583.333333333333
+giza,dokki,apartment,15000.0
+giza,faisal,apartment,4000.0
+giza,hadayek 6th of october,apartment,5036.231884057971
+giza,hadayek 6th of october,duplex,3284.600389863548
+giza,hadayek 6th of october,penthouse,5988.023952095808
+giza,hadayek 6th of october,studio,2222.777777777778
+giza,hadayek al-ahram,apartment,6168.831168831169
+giza,hadayek al-ahram,duplex,5555.555555555556
+giza,haram,apartment,3132.183908045977
+giza,haram,duplex,2579.7872340425533
+giza,mohandessin,apartment,12361.111111111111
+giza,mohandessin,duplex,11200.0
+giza,sheikh zayed,apartment,12093.023255813954
+giza,sheikh zayed,duplex,15625.0
+giza,sheikh zayed,penthouse,14720.812182741116
+giza,sheikh zayed,studio,25864.0
+giza,west somid,apartment,7500.0
+giza,west somid,duplex,5507.246376811594
+ismailia,ismailia city,apartment,6833.333333333333
+kafr al-sheikh,__other__,apartment,12785.185185185184
+matruh,__other__,apartment,8740.409207161125
+matruh,__other__,studio,3550.250626566416
+minya,__other__,apartment,8500.0
+monufia,__other__,apartment,5300.0
+port said,__other__,apartment,6666.666666666667
+qalyubia,__other__,apartment,4500.0
+qena,__other__,apartment,5769.2307692307695
+red sea,hurghada,apartment,10625.0
+red sea,hurghada,duplex,13928.57142857143
+red sea,hurghada,studio,10666.666666666666
+sharqia,10th of ramadan,apartment,3809.5238095238096
+sharqia,__other__,apartment,7200.0
+sharqia,__other__,duplex,9375.0
+south sinai,__other__,apartment,9642.857142857143
+south sinai,__other__,duplex,6818.181818181818
+suez,__other__,apartment,13068.711656441717

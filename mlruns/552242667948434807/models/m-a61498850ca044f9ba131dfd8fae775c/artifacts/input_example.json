@@ -1,0 +1,1 @@
+{"columns": ["area", "bedrooms", "bathrooms", "level_num", "is_ground", "furnished_bin", "area_per_bedroom", "bathrooms_per_bedroom", "rooms_total", "log_area", "sqrt_area", "bed_bath_ratio", "area_per_room", "type", "city", "region"], "data": [[135.0, 2.0, 2.0, 8.0, 0.0, 0.0, 67.5, 1.0, 4.0, 4.912654885736052, 11.61895003862225, 1.0, 33.75, "apartment", "giza", "haram"]]}
